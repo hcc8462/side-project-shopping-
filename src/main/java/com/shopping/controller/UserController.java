@@ -23,8 +23,10 @@ public class UserController {
     public String register(@RequestParam("username") String username,
                            @RequestParam("password") String password,
                            @RequestParam("email") String email,
+                           @RequestParam("phonenumber") Integer phonenumber,
                            Model model) {
-        User user = userService.createUser(username, password, email);
+    	
+        User user = userService.createUser(username, password, email, phonenumber );
         model.addAttribute("message", "User registered successfully!");
         return "login";  // 跳轉到登錄頁面
     }

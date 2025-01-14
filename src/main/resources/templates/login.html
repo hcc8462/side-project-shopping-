@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>會員登入</title>
@@ -9,7 +9,7 @@
     <div class="login-container">
         <h1>會員登入</h1>
 
-        <form th:action="@{/login}" method="post">
+        <form id="loginForm">
             <div>
                 <label for="username">帳號</label>
                 <input type="text" id="username" name="username" required>
@@ -20,14 +20,43 @@
             </div>
 
             <!-- 錯誤訊息 -->
-            <div th:if="${error}" class="error">
-                <p th:text="${error}"></p>
-            </div>
+            <div id="errorMessage" style="color: red;"></div>
 
             <div>
                 <button type="submit">登入</button>
             </div>
         </form>
     </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // 防止表單提交
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const loginData = {
+                username: username,
+                password: password
+            };
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(loginData) // 將 JavaScript 對象轉換為 JSON 字符串
+            })
+            .then(response => response.json()) // 假設後端回傳的是 JSON 格式
+            .then(data => {
+                console.log('JWT Token:', data.token);  // 顯示 JWT
+                localStorage.setItem('jwt', data.token); // 儲存 JWT 到 Local Storage，便於後續請求使用
+                window.location.href = '/dashboard'; // 重定向到主頁面
+            })
+            .catch(error => {
+                document.getElementById('errorMessage').textContent = error.message;
+            });
+        });
+    </script>
 </body>
 </html>

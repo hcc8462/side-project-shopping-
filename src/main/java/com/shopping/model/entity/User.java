@@ -26,6 +26,9 @@ public class User {
 
 	@Column(nullable = false, unique = true)
 	private String email;
+	
+	@Column(nullable = false, unique = true)
+	private Integer phoneNumber;
 
 	private String role; // 用於存儲用戶角色，例如 ADMIN 或 USER
 }
