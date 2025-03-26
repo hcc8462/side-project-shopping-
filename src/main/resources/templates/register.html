@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>會員註冊</title>
-    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" href="/css/register.css">
 </head>
 <body>
     <div class="register-container">
@@ -59,25 +59,28 @@
             };
 
             fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(registerData) // 將 JavaScript 對象轉換為 JSON 字符串
-            })
-            .then(response => response.json()) // 假設後端回傳的是 JSON 格式
-            .then(data => {
-                if (data.message) {
-                    // 註冊成功後重定向到登入頁面
-                    window.location.href = '/login';
-                } else {
-                    // 顯示錯誤訊息
-                    document.getElementById('errorMessage').textContent = data.error;
-                }
-            })
-            .catch(error => {
-                document.getElementById('errorMessage').textContent = error.message;
-            });
+            	  method: 'POST',
+            	  headers: {
+            	    'Content-Type': 'application/json'
+            	  },
+            	  body: JSON.stringify(registerData)
+            	})
+            	.then(response => {
+            	  if (!response.ok) {
+            	    return response.text().then(text => {
+            	      throw new Error(text); // 後端錯誤訊息是純文字
+            	    });
+            	  }
+            	  return response.json(); // 確保是 200 OK 才解析 JSON
+            	})
+            	.then(data => {
+            	  if (data.message) {
+            	    window.location.href = '/login';
+            	  }
+            	})
+            	.catch(error => {
+            	  document.getElementById('errorMessage').textContent = error.message;
+            	});
         });
     </script>
 </body>
